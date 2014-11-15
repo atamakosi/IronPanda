@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
@@ -22,16 +21,18 @@ import com.google.android.gms.location.LocationClient;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements
+public class TestActivity extends Activity implements
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener{
 
-    private final static String TAG = MainActivity.class.getSimpleName();
+    private final static String TAG = TestActivity.class.getSimpleName();
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    public final static String PHONE_UID = "PHONE_UID";
+
+
     private LocationClient mLocationClient;
     private Location mCurrentLocation;
-    private EditText pIdTextView;
     private int UID;
 
     // Y positions are relative to height of bg_distance image.
@@ -53,14 +54,15 @@ public class MainActivity extends Activity implements
         getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.distance_view);
         dotView = findViewById(R.id.dot);
-        pIdTextView = (EditText) findViewById(R.id.pUUID);
-//        pIdTextView.setText("0");
+        Bundle bundle = getIntent().getExtras();
 //        beacon = getIntent().getParcelableExtra(ListBeaconsActivity.EXTRAS_BEACON);
-//        region = new Region("regionid", beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
-//        if (beacon == null) {
-//            Toast.makeText(this, "Beacon not found in intent extras", Toast.LENGTH_LONG).show();
-//            finish();
-//        }
+        beacon = bundle.getParcelable(ListBeaconsActivity.EXTRAS_BEACON);
+        UID = bundle.getInt(TestActivity.PHONE_UID);
+        region = new Region("regionid", beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
+        if (beacon == null) {
+            Toast.makeText(this, "Beacon not found in intent extras", Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         beaconManager = new BeaconManager(this);
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
@@ -117,7 +119,7 @@ public class MainActivity extends Activity implements
             LocationData lData = new LocationData();
             lData.b_uuid = beacon.getProximityUUID();
             lData.meters = Utils.computeAccuracy(beacon);
-            lData.p_uuid = pIdTextView.getText().toString();
+            lData.p_uuid = String.valueOf(UID);
             lData.lat = mCurrentLocation.getLatitude();
             lData.lng = mCurrentLocation.getLongitude();
             new UploadAsyncTask(lData).execute();
@@ -144,7 +146,7 @@ public class MainActivity extends Activity implements
                 try {
                     beaconManager.startRanging(region);
                 } catch (RemoteException e) {
-                    Toast.makeText(MainActivity.this, "Cannot start ranging, something terrible happened",
+                    Toast.makeText(TestActivity.this, "Cannot start ranging, something terrible happened",
                             Toast.LENGTH_LONG).show();
                     Log.e(TAG, "Cannot start ranging", e);
                 }

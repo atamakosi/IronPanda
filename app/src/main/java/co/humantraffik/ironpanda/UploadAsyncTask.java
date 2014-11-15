@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import co.humantraffik.ironpanda.MainActivity.LocationData;
+import co.humantraffik.ironpanda.TestActivity.LocationData;
 
 /**
  * Created by Adam on 11/15/2014.
  */
-public class UploadAsyncTask extends AsyncTask<MainActivity.LocationData, Void, Void> {
+public class UploadAsyncTask extends AsyncTask<TestActivity.LocationData, Void, Void> {
 
     private final String BASKET_BASE_URL = "";
     private final String RCVR_LAT = "";
@@ -22,7 +22,7 @@ public class UploadAsyncTask extends AsyncTask<MainActivity.LocationData, Void, 
     private final String PHONE_UUID = "";
     private LocationData locationData;
 
-    public UploadAsyncTask(MainActivity.LocationData locationData) {
+    public UploadAsyncTask(TestActivity.LocationData locationData) {
         super();
         this.locationData = locationData;
     }
